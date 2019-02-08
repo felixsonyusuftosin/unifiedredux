@@ -7,3 +7,4 @@ export {
     convertStringToTitleCase
 }
 from './strings';
+export { getType } from './get.type';

@@ -26,10 +26,10 @@ const FAIL_ITEM = (PARAM) => `FAIL_${ PARAM }`;
  * @function setuUpActions set up actions statements as an object from the action types defined 
  * in the actionDictionary
  * @param { Object } actions - If you will like to pass a different set of actions from the one defined in the action dictionary pass in this variable
- * other wise it takes in a default parameted 
- * @reaturb { Object } action objects 
+ * other wise it takes in a default parameter
+ * @reaturn { Object } action objects 
  */
-export const setUpActions = (actions = actionDictionary) => {
+export const setUpActions = (actions = actionDictionary ) => {
     const actionObject = {};
     const allActions = Object.keys(actions);
     allActions.map((actionKey) => {

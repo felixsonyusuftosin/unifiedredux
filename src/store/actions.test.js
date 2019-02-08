@@ -4,7 +4,7 @@
 // local imports 
 import {
     setUpActions
-} from './actions';
+} from './setup.action';
 
 describe('setUpActions', () => {
     let testActions = {
