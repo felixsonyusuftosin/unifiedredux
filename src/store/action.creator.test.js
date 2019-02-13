@@ -72,3 +72,24 @@ describe('synchronous actions ', () => {
         expect(dispatchActions('TEST_STORE', payloadItems, false)).toEqual(expectedActions)
     })
 })
+
+describe('synchronous actions with parameter functions ', () => {
+    afterEach(() => {
+        fetchMock.restore();
+    })
+    it(' creates a default action RECIEVE_TEST_STORE when test store is done ', () => {
+        const payloadItems = (item) => item;
+        const item = {
+            testItems: ['Hey i am an item in the test ']
+        };
+        const expectedActions = {
+            type: RECIEVE,
+            fetching: false,
+            payload: {
+                testItems: ['Hey i am an item in the test ']
+
+            }
+        }
+        expect(dispatchActions('TEST_STORE', payloadItems, false, [item])).toEqual(expectedActions)
+    })
+})
