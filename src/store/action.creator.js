@@ -62,11 +62,11 @@ const returnActionsSync = (actionDictionaryKey) => {
 }
 
 /**
- * @function dispathActions 
+ * @function dispatchActions 
  * @description dispatch actions to the the action creators 
  * @param { string } dictKey - the actionDictionary key that is being called 
  * @param { Object  } eventAction the action to pass to events could be a promise, function or an object
- * @param { boolean  }  asyncj  if request is asynchronous is it true otherwuse it is false 
+ * @param { boolean  }  async  if request is asynchronous is it true otherwuse it is false 
  * @param { parameters } parameters array to call with parameters 
  * */
 export const dispatchActions = (dictKey, eventAction, asynchronous = true, parameters = []) => {
