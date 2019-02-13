@@ -48,7 +48,8 @@ export const returnActionsAsync = (actionDictionaryKey) => {
  * @param  { Object } - value, to be passed to the reducer
  *  @param { string } - actionDictionaryKey
  */
-const returnActionsSync = (value, actionDictionaryKey) => {
+const returnActionsSync = ( actionDictionaryKey) => {
+    const actionSet = setUpActions()[actionDictionaryKey];
     return {
         recieve(value) {
             return {
@@ -62,32 +63,31 @@ const returnActionsSync = (value, actionDictionaryKey) => {
 }
 
 /**
- * @function dispathActions dispatch actions to the the action creators 
+ * @function dispathActions 
+ * @description dispatch actions to the the action creators 
  * @param { string } dictKey - the actionDictionary key that is being called 
  * @param { Object  } eventAction the action to pass to events could be a promise, function or an object
  * @param { boolean ?  }  asyncj  if request is asynchronous is it true otherwuse it is false 
  * @param { parameters ? } parameters array to call with parameters 
  * */
-export const dispatchActions = (dictKey, eventAction, asynch = true, parameters = []) => {
+export const dispatchActions = (dictKey, eventAction, asynchronous = true, parameters = []) => {
     if (!dictKey || !eventAction) {
         throw new Error(' !invalid request didnt pass in adequate parameters ')
     }
     const actions = returnActionsAsync(dictKey);
-    return async (dispatch) => {
-        if (!asynch) {
-            // call synchronous action creator
-            // if event action is a function
-            if (typeof eventAction === 'function') dispatch(returnActionsSync.recieve(eventAction.apply(this, parameters)));
-            // event action  is an object
-            else dispatch(actions(eventAction));
+    if (!asynchronous) {
+        if (typeof eventAction === 'function') {
+            return actions.recieve(eventAction.apply(this, parameters));
         } else {
-            // request is asynchronous  
-            // dispatch request state 
+           return actions.recieve(eventAction);
+        }
+    } else {
+        return async (dispatch) => {
             dispatch(actions.request());
-            const eventPromise =  eventAction.apply(parameters)
+            const eventPromise = eventAction.apply(parameters)
             return Promise.resolve(eventPromise).then((value) => {
                 return value.json().then(v => {
-                  return  dispatch(actions.recieve(v));
+                    return dispatch(actions.recieve(v));
                 })
             }).catch((err) => {
                 return dispatch(actions.fail(err));
