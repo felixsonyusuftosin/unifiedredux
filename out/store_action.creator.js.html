@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: store/action.creator.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: store/action.creator.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @file define actionCreators for hwew
+ */
+
+// local imports
+import {
+    setUpActions
+} from './setup.action';
+
+/**
+ * @function returnActionsAsync passes the appropriate async actions to the reducer 
+ * @param { string } actionDictionaryKey
+ */
+export const returnActionsAsync = (actionDictionaryKey) => {
+    const actionSet = setUpActions()[actionDictionaryKey];
+    if (!actionSet) {
+        throw new Error(`The dictKey ${ actionDictionaryKey } does not match any parameter of the actionDictionary object `);
+    }
+    // return appropriate action types 
+    const returnSet = {
+        request() {
+            return {
+                type: actionSet.request,
+                fetching: true,
+                payload: null
+            };
+        },
+        recieve(data) {
+            return {
+                type: actionSet.recieve,
+                fetching: false,
+                payload: data
+            };
+        },
+        fail(error) {
+            return {
+                type: actionSet.fail,
+                fetching: false,
+                payload: error
+            };
+        }
+    };
+    return returnSet;
+};
+
+/**
+ * @function returnActionSync passes the appropriate synchronous action to the store 
+ * @param  { Object } - value, to be passed to the reducer
+ *  @param { string } - actionDictionaryKey
+ */
+const returnActionsSync = (actionDictionaryKey) => {
+    return {
+        recieve(value) {
+            return {
+                type: `RECIEVE_${actionDictionaryKey}`,
+                fetching: false,
+                payload: value
+            }
+        }
+    }
+
+}
+
+/**
+ * @function dispatchActions 
+ * @description dispatch actions to the the action creators 
+ * @param { string } dictKey - the actionDictionary key that is being called 
+ * @param { Object  } eventAction the action to pass to events could be a promise, function or an object
+ * @param { boolean  }  async  if request is asynchronous is it true otherwuse it is false 
+ * @param { parameters } parameters array to call with parameters 
+ * */
+export const dispatchActions = (dictKey, eventAction, asynchronous = true, parameters = []) => {
+    if (!dictKey || !eventAction) {
+        throw new Error(' !invalid request didnt pass in adequate parameters ')
+    }
+
+    if (!asynchronous) {
+        const actions = returnActionsSync(dictKey);
+        if (typeof eventAction === 'function') {
+            return actions.recieve(eventAction.apply(this, parameters));
+        } else {
+            return actions.recieve(eventAction);
+        }
+    } else {
+        const actions = returnActionsAsync(dictKey);
+        return async (dispatch) => {
+            dispatch(actions.request());
+            const eventPromise = eventAction.apply(parameters)
+            return Promise.resolve(eventPromise).then((value) => {
+                return value.json().then(v => {
+                    return dispatch(actions.recieve(v));
+                })
+            }).catch((err) => {
+                return dispatch(actions.fail(err));
+            })
+        }
+    }
+};
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#actionDictionary">actionDictionary</a></li><li><a href="global.html#converStringToSnakeCase">converStringToSnakeCase</a></li><li><a href="global.html#convertStringToCamelCase">convertStringToCamelCase</a></li><li><a href="global.html#convertStringToTitleCase">convertStringToTitleCase</a></li><li><a href="global.html#dispatchActions">dispatchActions</a></li><li><a href="global.html#getTypeDeterminesthetypeofanitem">getType  Determines the type of an item</a></li><li><a href="global.html#reducerObject">reducerObject</a></li><li><a href="global.html#returnActionsAsyncpassestheappropriateasyncactionstothereducer">returnActionsAsync passes the appropriate async actions to the reducer</a></li><li><a href="global.html#returnActionSyncpassestheappropriatesynchronousactiontothestore">returnActionSync passes the appropriate synchronous action to the store</a></li><li><a href="global.html#setuUpActionssetupactionsstatementsasanobjectfromtheactiontypesdefinedintheactionDictionary">setuUpActions set up actions statements as an object from the action types defined 
+in the actionDictionary</a></li><li><a href="global.html#updateReducersObjectcreate">updateReducersObject create</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Wed Feb 13 2019 23:22:58 GMT+0100 (West Africa Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
