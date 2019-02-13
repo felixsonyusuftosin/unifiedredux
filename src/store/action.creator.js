@@ -62,7 +62,7 @@ const returnActionsSync = (actionDictionaryKey) => {
 }
 
 /**
- * @function dispathActions 
+ * @function dispatchActions 
  * @description dispatch actions to the the action creators 
  * @param { string } dictKey - the actionDictionary key that is being called 
  * @param { Object  } eventAction the action to pass to events could be a promise, function or an object
