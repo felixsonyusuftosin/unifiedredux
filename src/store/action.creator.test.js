@@ -2,9 +2,7 @@
  * @file tests for action creator and the dispatcher 
  */
 
-// third party imports 
 import configureMockStore from "redux-mock-store";
-// local imports 
 import {
     dispatchActions
 } from './action.creator';
