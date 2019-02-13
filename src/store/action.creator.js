@@ -48,8 +48,7 @@ export const returnActionsAsync = (actionDictionaryKey) => {
  * @param  { Object } - value, to be passed to the reducer
  *  @param { string } - actionDictionaryKey
  */
-const returnActionsSync = ( actionDictionaryKey) => {
-    const actionSet = setUpActions()[actionDictionaryKey];
+const returnActionsSync = (actionDictionaryKey) => {
     return {
         recieve(value) {
             return {
@@ -80,7 +79,7 @@ export const dispatchActions = (dictKey, eventAction, asynchronous = true, param
         if (typeof eventAction === 'function') {
             return actions.recieve(eventAction.apply(this, parameters));
         } else {
-           return actions.recieve(eventAction);
+            return actions.recieve(eventAction);
         }
     } else {
         const actions = returnActionsAsync(dictKey);
