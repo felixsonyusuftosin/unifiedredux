@@ -3,10 +3,6 @@
  */
 
 // local imports
-
-import {
-    actionDictionary
-} from './action.dictionary';
 import {
     setUpActions
 } from './setup.action';
@@ -66,58 +62,36 @@ const returnActionsSync = (value, actionDictionaryKey) => {
 }
 
 /**
- * @function a generic action creator 
+ * @function dispathActions dispatch actions to the the action creators 
  * @param { string } dictKey - the actionDictionary key that is being called 
- * @param { ActionFunctionType } the parameter passed could either be 
+ * @param { Object  } eventAction the action to pass to events could be a promise, function or an object
+ * @param { boolean ?  }  asyncj  if request is asynchronous is it true otherwuse it is false 
+ * @param { parameters ? } parameters array to call with parameters 
  * */
-export const dispatchActions = (dictKey, eventAction) => {
-    const actions = callActionType(dictKey);
+export const dispatchActions = (dictKey, eventAction, asynch = true, parameters = []) => {
+    if (!dictKey || !eventAction) {
+        throw new Error(' !invalid request didnt pass in adequate parameters ')
+    }
+    const actions = returnActionsAsync(dictKey);
     return async (dispatch) => {
-        dispatch(actions.request());
-        const {
-            func,
-            value
-        } = eventAction;
-        if (!func && !value || !dictKey) {
-            dispatch(actions.fail('Sorry you didnt provide the full parameters required for loading this action'));
-            return false;
+        if (!asynch) {
+            // call synchronous action creator
+            // if event action is a function
+            if (typeof eventAction === 'function') dispatch(returnActionsSync.recieve(eventAction.apply(this, parameters)));
+            // event action  is an object
+            else dispatch(actions(eventAction));
         } else {
-            // Check if eventAction type 
-            if (func) {
-                // Run block if func is promiselike  
-                try {
-                    func()
-                        .then((resolved) => {
-                            try {
-                                resolved.json().then((data) => {
-                                    dispatch(actions.recieve(data));
-                                }).catch((err) => {
-                                    dispatch(actions.recieve(resolved));
-                                });
-                            } catch (err) {
-                                dispatch(actions.recieve(resolved));
-                            }
-                            // return;
-                        })
-                        .catch((err) => {
-                            dispatch(actions.fail(err));
-                            return;
-                        });
-                } catch (err) {
-                    // func is no promiselike 
-                    try {
-                        dispatch(actions.recieve(func()));
-                        return;
-                    } catch (err) {
-                        dispatch(actions.fail(err));
-                        return;
-                    }
-                }
-            } else {
-                dispatch(actions.recieve(value));
-                return;
-            }
-            return;
+            // request is asynchronous  
+            // dispatch request state 
+            dispatch(actions.request());
+            const eventPromise =  eventAction.apply(parameters)
+            return Promise.resolve(eventPromise).then((value) => {
+                return value.json().then(v => {
+                  return  dispatch(actions.recieve(v));
+                })
+            }).catch((err) => {
+                return dispatch(actions.fail(err));
+            })
         }
     }
 };
