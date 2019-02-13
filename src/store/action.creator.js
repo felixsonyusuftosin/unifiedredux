@@ -74,14 +74,16 @@ export const dispatchActions = (dictKey, eventAction, asynchronous = true, param
     if (!dictKey || !eventAction) {
         throw new Error(' !invalid request didnt pass in adequate parameters ')
     }
-    const actions = returnActionsAsync(dictKey);
+
     if (!asynchronous) {
+        const actions = returnActionsSync(dictKey);
         if (typeof eventAction === 'function') {
             return actions.recieve(eventAction.apply(this, parameters));
         } else {
            return actions.recieve(eventAction);
         }
     } else {
+        const actions = returnActionsAsync(dictKey);
         return async (dispatch) => {
             dispatch(actions.request());
             const eventPromise = eventAction.apply(parameters)

@@ -1,17 +1,9 @@
 /**
- * @file define generic reducers for the Grid Client APP
+ * @file define generic reducers 
  */
 
 // 
-import { actionDictionary } from '../action-types/action-config';
-
-/**
- * third party imports 
- */
-
-/**
- * Global constants
- */
+import { setUpActions } from './setup.action';
 
 // initial default state 
 const initialState = {
@@ -21,15 +13,16 @@ const initialState = {
 };
 
 /**
- * @function returns reducers that represents the variables defined in the actionDictionaryConstants 
+ * @function
+ * @description returns reducers that represents the variables defined in the setUpActions Constants 
  * @return  { any } - return values 
  */
 export const reducerObject = () => {
     const reducers = {};
-    Object.keys(actionDictionary()).map((actionKey) => {
+    Object.keys(setUpActions()).map((actionKey) => {
         reducers[ actionKey ] = ( state = initialState, action ) => {
             switch (action.type) {
-                case actionDictionary()[ actionKey ].request:
+                case setUpActions()[ actionKey ].request:
                     {
                         return {
                             ...state,
@@ -38,7 +31,7 @@ export const reducerObject = () => {
                             error: false
                         }
                     }
-                case actionDictionary()[ actionKey ].recieve:
+                case setUpActions()[ actionKey ].recieve:
                     {
                         return {
                             ...state,
@@ -47,7 +40,7 @@ export const reducerObject = () => {
                             error: false
                         };
                     }
-                case actionDictionary()[ actionKey ].fail:
+                case setUpActions()[ actionKey ].fail:
                     {
                         return {
                             ...state,
