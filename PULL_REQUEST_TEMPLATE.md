@@ -6,7 +6,7 @@
 #### How should this be manually tested?
 - __description here___
 #### Any background context you want to provide?
-- __description here___
+- __description here___ 
 
 #### Links to the Jira tasks?
 - [Ticket Id](https://botkeeper.atlassian.net/jira/)
@@ -29,8 +29,8 @@
 **Check the steps that have being completed by the reviewer**
 
 - [ ] Tested locally and feature is working 
-- [ ] Unit test passed 
-- [ ] Code changes documented 
-
+- [ ] Unit test passed (Reviewer)  
+- [ ] Code changes documented  (Reviewer)
+ 
 
 
